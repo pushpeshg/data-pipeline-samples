@@ -1,0 +1,97 @@
+{
+  "objects": [
+    {
+      "dataFormat": {
+        "ref": "DataFormatId_4wPQK"
+      },
+      "filePath": "#{myFilePath}",
+      "name": "InputS3Location",
+      "id": "DataNodeId_ozUX1",
+      "type": "S3DataNode"
+    },
+    {
+      "databaseName": "#{myDatabaseName}",
+      "*password": "#{*myPassword}",
+      "name": "myPostgresDatabase",
+      "id": "DatabaseId_dzbaG",
+      "type": "RdsDatabase",
+      "rdsInstanceId": "#{myRdsInstanceId}",
+      "username": "#{myUsername}"
+    },
+    {
+      "subnetId": "#{mySubnetId}",
+      "resourceRole": "DataPipelineDefaultResourceRole",
+      "role": "DataPipelineDefaultRole",
+      "securityGroupIds": "#{mySecurityGroupIds}",
+      "instanceType": "m4.large",
+      "name": "myEC2Resource",
+      "id": "ResourceId_i30S0",
+      "terminateAfter": "24 Hours",
+      "type": "Ec2Resource"
+    },
+    {
+      "name": "DataFormat",
+      "column": "id",
+      "id": "DataFormatId_4wPQK",
+      "type": "CSV"
+    },
+    {
+      "output": {
+        "ref": "SqlDataNodeId_6b0SV"
+      },
+      "input": {
+        "ref": "DataNodeId_ozUX1"
+      },
+      "name": "DefaultCopyActivity1",
+      "id": "CopyActivityId_DuYil",
+      "runsOn": {
+        "ref": "ResourceId_i30S0"
+      },
+      "type": "CopyActivity"
+    },
+    {
+      "failureAndRerunMode": "CASCADE",
+      "resourceRole": "DataPipelineDefaultResourceRole",
+      "role": "DataPipelineDefaultRole",
+      "pipelineLogUri": "#{myPipelineLogUri}",
+      "scheduleType": "ONDEMAND",
+      "name": "Default",
+      "id": "Default"
+    },
+    {
+      "database": {
+        "ref": "DatabaseId_dzbaG"
+      },
+      "name": "DefaultSqlDataNode1",
+      "insertQuery": "INSERT INTO mytable VALUES (?)",
+      "id": "SqlDataNodeId_6b0SV",
+      "type": "SqlDataNode",
+      "schemaName": "#{mySchemaName}",
+      "table": "#{myTablename}"
+    }
+  ],
+  "parameters": [
+    {
+      "description": "Input S3 folder",
+      "id": "myFilePath",
+      "type": "AWS::S3::ObjectKey"
+    },
+    {
+      "description": "Postgres User",
+      "id": "myUsername",
+      "type": "String"
+    }
+  ],
+  "values": {
+    "myRdsInstanceId": "<your-rds-instance-id>",
+    "myUsername": "<your-db-user-name>",
+    "myFilePath": "<s3://your-input-location>",
+    "mySecurityGroupIds": "<your-security-gorup-id-for-ec2>",
+    "mySubnetId": "<your-subnet-id-for-ec2>",
+    "myDatabaseName": "<your-database-name>",
+    "mySchemaName": "<your-schema-name>",
+    "myTablename": "<your-table-name>",
+    "myPipelineLogUri": "<s3://your-log-location>",
+    "*myPassword": "<your-db-password>"
+  }
+}
